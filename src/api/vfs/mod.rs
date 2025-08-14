@@ -434,13 +434,10 @@ impl Vfs {
     pub fn restore_mount(&self, fs: BackFileSystem, fs_idx: VfsIndex, path: &str) -> Result<()> {
         let (entry, ino) = fs.mount()?;
         if ino > VFS_MAX_INO {
-            return Err(Error::new(
-                ErrorKind::Other,
-                format!(
-                    "Unsupported max inode number, requested {} supported {}",
-                    ino, VFS_MAX_INO
-                ),
-            ));
+            return Err(Error::other(format!(
+                "Unsupported max inode number, requested {} supported {}",
+                ino, VFS_MAX_INO
+            )));
         }
 
         let _guard = self.lock.lock().unwrap();
